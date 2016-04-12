@@ -1,0 +1,11 @@
+{
+	"name"			: "List::Combinations",
+	"version"		: "1.0.0",
+	"description"	: "Random numbers and bytes emulating arc4random",
+	"author"		: "Daniel Green",
+	"provides"		: {
+		"List::Combinations" : "lib/List/Combinations.pm6"
+	},
+	"depends"		: [],
+	"source-url"	: "git://github.com/masterduke17/list-combinations.git"
+}
