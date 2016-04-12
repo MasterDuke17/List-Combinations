@@ -13,12 +13,11 @@ multi sub combos(@array, Int $of --> Array) is export {
 	for ^$of -> $level {
 		$loops ~= qq/{"\t" x $level}loop (my int \$i$level = {$level == 0 ?? 0 !! '$i' ~ $level-1 ~ '+1'}; \$i$level < $size-{$of-$level-1}; \$i$level++) \{\n/;
 	}
-	$loops ~= qq/{"\t" x $of}\@results.push([{join('], ', ('@array[$i' xx $of ) >>~>> ^$of)}]]);\n/;
+	$loops ~= qq/{"\t" x $of}\@results.push([{join('], ', ^$of .map: '@array[$i' ~ *)}]]);\n/;
 	for ^$of -> $level {
 		$loops ~= qq/{"\t" x $of-$level-1}\}\n/;
 	}
 
-	say $loops;
 	use MONKEY-SEE-NO-EVAL;
 	EVAL $loops;
 
