@@ -37,14 +37,14 @@ multi sub perms (@array --> Array) is export {
 
 	my @a = @array;
 	my @results;
-	@results.push: Array.new(@a);
+	@results.push: @a.List;
 
 	my int @idx = (0) xx $size;
 	loop (my int $i = 1; $i < $size; ) {
 		if @idx[$i] < $i {
 			my int $swap = ($i % 2) * @idx[$i];
-			(@a[$i], @a[$swap]) = (@a[$swap], @a[$i]);
-			@results.push: Array.new(@a);
+			(@a[$i] +^= @a[$swap]) +^= @a[$swap] +^= @a[$i];
+			@results.push: @a.List;
 			@idx[$i]++;
 			$i = 1;
 		} else {
