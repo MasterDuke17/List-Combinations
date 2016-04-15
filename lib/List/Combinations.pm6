@@ -2,26 +2,29 @@ use v6;
 
 unit module List::Combinations;
 
+my %subs;
+
 multi sub combos(@array, Int $of --> Array) is export {
 	return [] if $of < 0;
 	my int $size = @array.elems;
     return [(),] if $size < 1 || $of < 1;
 
-	my @results;
+	if not %subs{$of}:exists {
+		my Str $loops = "sub combo(\@sarray --> Array) \{\nmy int \$ssize = \@sarray.elems;\nmy \@results;\n";
+		for ^$of -> $level {
+			$loops ~= qq/{"\t" x $level}loop (my int \$i$level = {$level == 0 ?? 0 !! '$i' ~ $level-1 ~ '+1'}; \$i$level < \$ssize-{$of-$level-1}; \$i$level++) \{\n/;
+		}
+		$loops ~= qq/{"\t" x $of}\@results.push([{join('], ', ^$of .map: '@sarray[$i' ~ *)}]]);\n/;
+		for ^$of -> $level {
+			$loops ~= qq/{"\t" x $of-$level-1}\}\n/;
+		}
+		$loops ~= "\n\@results\}";
 
-	my Str $loops;
-	for ^$of -> $level {
-		$loops ~= qq/{"\t" x $level}loop (my int \$i$level = {$level == 0 ?? 0 !! '$i' ~ $level-1 ~ '+1'}; \$i$level < $size-{$of-$level-1}; \$i$level++) \{\n/;
+		use MONKEY-SEE-NO-EVAL;
+		%subs{$of} = EVAL $loops;
 	}
-	$loops ~= qq/{"\t" x $of}\@results.push([{join('], ', ^$of .map: '@array[$i' ~ *)}]]);\n/;
-	for ^$of -> $level {
-		$loops ~= qq/{"\t" x $of-$level-1}\}\n/;
-	}
 
-	use MONKEY-SEE-NO-EVAL;
-	EVAL $loops;
-
-	@results;
+	%subs{$of}(@array);
 }
 
 multi sub combos(Int $n, Int $k --> Array) is export {
