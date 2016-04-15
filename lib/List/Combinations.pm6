@@ -27,3 +27,32 @@ multi sub combos(@array, Int $of --> Array) is export {
 multi sub combos(Int $n, Int $k --> Array) is export {
 	combos(^$n, $k);
 }
+
+multi sub perms (@array --> Array) is export {
+	my int $size = @array.elems;
+    return [(),] if $size < 1;
+
+	my @a = @array;
+	my @results;
+	@results.push: Array.new(@a);
+
+	my int @idx = (0) xx $size;
+	loop (my int $i = 1; $i < $size; ) {
+		if @idx[$i] < $i {
+			my int $swap = ($i % 2) * @idx[$i];
+			(@a[$i], @a[$swap]) = (@a[$swap], @a[$i]);
+			@results.push: Array.new(@a);
+			@idx[$i]++;
+			$i = 1;
+		} else {
+			@idx[$i] = 0;
+			$i++;
+		}
+	}
+
+	@results;
+}
+
+multi sub perms(Int $n --> Array) is export {
+	perms(^$n);
+}
