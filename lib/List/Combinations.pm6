@@ -10,7 +10,7 @@ multi sub combos(@array, Int $of --> Array) is export {
 	return [(),] if $size < 1 || $of < 1;
 
 	if not %subs{$of}:exists {
-		my Str $loops = "sub combo$of\(\@sarray --> Array) \{\nmy int \$ssize = \@sarray.elems;\nmy \@results;\n";
+		my Str $loops = qq/sub combo$of\(\@sarray --> Array) \{\nmy int \$ssize = \@sarray.elems;\nmy \@results;\n/;
 		for ^$of -> $level {
 			$loops ~= qq/{"\t" x $level}loop (my int \$i$level = {$level == 0 ?? 0 !! '$i' ~ $level-1 ~ '+1'}; \$i$level < \$ssize-{$of-$level-1}; \$i$level++) \{\n/;
 		}
@@ -18,7 +18,7 @@ multi sub combos(@array, Int $of --> Array) is export {
 		for ^$of -> $level {
 			$loops ~= qq/{"\t" x $of-$level-1}\}\n/;
 		}
-		$loops ~= "\n\@results\}";
+		$loops ~= qq/\n\@results\}/;
 
 		use MONKEY-SEE-NO-EVAL;
 		%subs{$of} = EVAL $loops;
