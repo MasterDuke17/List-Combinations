@@ -14,7 +14,7 @@ multi sub combos(@array, Int $of --> Array) is export {
 		for ^$of -> $level {
 			$loops ~= qq/{"\t" x $level}loop (my int \$i$level = {$level == 0 ?? 0 !! '$i' ~ $level-1 ~ '+1'}; \$i$level < \$ssize-{$of-$level-1}; \$i$level++) \{\n/;
 		}
-		$loops ~= qq/{"\t" x $of}\@results.push([{join('], ', ^$of .map: '@sarray[$i' ~ *)}]]);\n/;
+		$loops ~= qq/{"\t" x $of}\@results.push([{join('], ', map('@sarray[$i' ~ *, ^$of))}]]);\n/;
 		for ^$of -> $level {
 			$loops ~= qq/{"\t" x $of-$level-1}\}\n/;
 		}
