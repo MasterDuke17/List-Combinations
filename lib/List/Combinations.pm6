@@ -7,7 +7,7 @@ my %subs;
 multi sub combos(@array, Int $of --> Array) is export {
 	return [] if $of < 0;
 	my int $size = @array.elems;
-    return [(),] if $size < 1 || $of < 1;
+	return [(),] if $size < 1 || $of < 1;
 
 	if not %subs{$of}:exists {
 		my Str $loops = "sub combo$of\(\@sarray --> Array) \{\nmy int \$ssize = \@sarray.elems;\nmy \@results;\n";
@@ -33,7 +33,7 @@ multi sub combos(Int $n, Int $k --> Array) is export {
 
 multi sub perms (@array --> Array) is export {
 	my int $size = @array.elems;
-    return [(),] if $size < 1;
+	return [(),] if $size < 1;
 
 	my @a = @array;
 	my @results;
